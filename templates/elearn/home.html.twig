@@ -1,20 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ElearnController!{% endblock %}
+{% block title %}Elearn homepage{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="super_container">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <!-- Home -->
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'src/Controller/ElearnController.php' |file_link(0) }}">src/Controller/ElearnController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'templates/elearn/home.html.twig'|file_link(0) }}">templates/elearn/home.html.twig</a></code></li>
-    </ul>
-</div>
+        <div class="home">
+            <div class="home_slider_container">
+
+                <!-- Home Slider -->
+                <div class="owl-carousel owl-theme home_slider">
+
+                    <!-- Slider Item -->
+                    <div class="owl-item">
+                        <!-- Background image artist https://unsplash.com/@benwhitephotography -->
+                        <div class="home_slider_background" style="background-image:url({{ asset("images/index.jpg") }})"></div>
+                        <div class="home_container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="home_content text-center">
+                                            <div class="home_logo"><img src="{{ asset("images/home_logo.png") }}" alt=""></div>
+                                            <div class="home_text">
+                                                <div class="home_title">Complete Online Courses</div>
+                                            </div>
+                                            <div class="home_buttons">
+{#                                                Requries change blow#}
+                                                <div class="button home_button"><a href="{{ path('courses') }}">see all courses<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slider Item -->
+                    <div class="owl-item">
+                        <!-- Background image artist https://unsplash.com/@benwhitephotography -->
+                        <div class="home_slider_background" style="background-image:url({{ asset("images/index.jpg") }})"></div>
+                        <div class="home_container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="home_content text-center">
+                                            <div class="home_logo"><img src="{{ asset("images/home_logo.png") }}" alt=""></div>
+                                            <div class="home_text">
+                                                <div class="home_title">Come Learn with Us!</div>
+                                            </div>
+                                            <div class="home_buttons">
+{#                                                Requires change below#}
+                                                <div class="button home_button"><a href="{{ path('courses') }}">see all courses<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 {% endblock %}

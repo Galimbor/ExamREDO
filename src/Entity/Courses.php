@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Courses
  *
  * @ORM\Table(name="courses", indexes={@ORM\Index(name="cat_id", columns={"cat_id"}), @ORM\Index(name="teacher_id", columns={"teacher_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CoursesRepository")
  */
 class Courses
 {

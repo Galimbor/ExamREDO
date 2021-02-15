@@ -1,0 +1,180 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Elearn courses{% endblock %}
+
+{% block body %}
+    <!-- Header -->
+
+    <header class="header">
+
+        <!-- Top Bar -->
+        <div class="top_bar">
+            <div class="top_bar_container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="top_bar_content d-flex flex-row align-items-center justify-content-start">
+                                <ul class="top_bar_contact_list">
+                                    <li>
+                                        <div class="question">Have any questions?</div>
+                                    </li>
+                                    <li>
+                                        <div>(009) 35475 6688933 32</div>
+                                    </li>
+                                    <li>
+                                        <div>info@elaerntemplate.com</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header Content -->
+        <div class="header_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="header_content d-flex flex-row align-items-center justify-content-start">
+                            <div class="logo_container">
+                                <a href="#">
+                                    <div class="logo_content d-flex flex-row align-items-end justify-content-start">
+                                        <div class="logo_img"><img src="{{ asset("images/logo.png") }}" alt=""></div>
+                                        <div class="logo_text">learn</div>
+                                    </div>
+                                </a>
+                            </div>
+                            <nav class="main_nav_contaner ml-auto">
+                                <ul class="main_nav">
+                                    {% if app.user %}
+                                        <li><a href="{{ path('elearn') }}">home</a></li>
+                                        <li class="active"><a href="{{ path('courses') }}">courses</a></li>
+                                        <li><a href="{{ path('mycourses') }}">My courses</a></li>
+                                        <li><a href="{{ path('app_logout') }}"> Logout  </a></li>
+                                        <a> <li>WELCOME {{ app.user.name }} </a> </li>
+                                    {% else %}
+                                        <li><a href="{{ path('elearn') }}">home</a></li>
+                                        <li class="active"><a href="{{ path('courses') }}">courses</a></li>
+                                        <li><a href="{{ path('app_register') }}">Register</a></li>
+                                        <li><a href="{{ path('app_login') }}">Login</a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+
+    <!-- Courses -->
+
+    <div class="courses">
+        <div class="container">
+
+
+            <div class="row courses_row">
+
+
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="section_title text-center"><h2>Choose your new course!</h2></div>
+                    <br>
+                </div>
+
+
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success w-75 alert-dismissible fade show mx-auto text-center mt-3 "
+                         role="alert">{{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger w-75 alert-dismissible fade show mx-auto text-center mt-3 "
+                         role="alert">{{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+
+
+
+                {% for course in courses %}
+                <!-- Course -->
+                <div class="col-lg-4 col-md-6 divbutton">
+                    <div class="course">
+                        <div class="course_image"><img src="{{ asset('images/' ~course.image) }}" alt=""></div>
+                        <div class="course_body">
+                            <div class="course_header d-flex flex-row align-items-center justify-content-start">
+                                <div class="course_tag"><a href="#">{{ course.cat.name }}</a></div>
+                                <div class="course_price ml-auto">Price: <span>{{ course.price }}</span></div>
+                            </div>
+
+                            <div class="course_title course_info"><h3><a href="#">{{ course.name }}</a></h3></div>
+                            <div class="course_text course_info">{{ course.description }}</div>
+
+
+                            <div class="text-center mt-3" >
+                                <div class="button" style="display: none;" ><a href="{{ path('enroll', {id : course.id}) }} ">Enroll</a></div>
+                            </div>
+
+                            <div class="course_footer d-flex align-items-center justify-content-start">
+                                <div class="course_author_image"><img src=" {{ asset('images/' ~course.teacher.image) }}"  >  </div>
+                                <div class="course_author_name"> By <a href="#"> {{ course.teacher.name }} </a> </div>
+                                <div class="course_sales ml-auto"><span>{{ course.sales }}</span> Sales</div>
+                            </div>
+                            <br>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+
+                <!-- About -->
+                <div class="col-lg-3 footer_col">
+                    <div class="footer_about">
+                        <div class="logo_container">
+                            <a href="#">
+                                <div class="logo_content d-flex flex-row align-items-end justify-content-start">
+                                    <div class="logo_img"><img src="{{ asset('images/logo.png') }}" alt=""></div>
+                                    <div class="logo_text">learn</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="footer_about_text">
+                        </div>
+
+                        <div class="copyright">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                    href="https://colorlib.com" target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    </div>
+
+{% endblock %}

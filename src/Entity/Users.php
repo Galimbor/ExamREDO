@@ -2,131 +2,99 @@
 
 namespace App\Entity;
 
+use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Users
- *
- * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="email", columns={"email"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=UsersRepository::class)
+ * @ORM\Table(name="`users`")
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-class Users
+class Users implements UserInterface
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Please insert an email.")
+     * @Assert\Email(message="Please insert a valid email.")
      */
     private $email;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     */
-    private $createdAt;
+
+    private $roles = [];
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     * @var string The hashed password
+     * @ORM\Column(type="string")
      */
-    private $updatedAt;
+    private $password_digest;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="password_digest", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $passwordDigest;
+    private $created_at;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="remember_digest", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $rememberDigest;
+    private $updated_at;
+
+
 
     /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="admin", type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $remember_digest;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $admin;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="activation_digest", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $activationDigest;
+    private $activation_digest;
 
     /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="activated", type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $activated;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="activated_at", type="datetime", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $activatedAt;
+    private $activated_at;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="reset_digest", type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $resetDigest;
+    private $reset_digest;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="reset_sent_at", type="datetime", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $resetSentAt;
+    private $reset_sent_at;
 
     /**
-     * @var json|null
-     *
-     * @ORM\Column(name="roles", type="json", nullable=true)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Please insert a name.")
      */
-    private $roles;
+    private $name;
+
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -141,60 +109,121 @@ class Users
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->createdAt;
+        return (string) $this->email;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->createdAt = $createdAt;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->updatedAt;
+        return (string) $this->password_digest;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setPassword(string $password): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->password_digest = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getCreatedAt(): ?string
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(string $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?string
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(string $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
 
     public function getPasswordDigest(): ?string
     {
-        return $this->passwordDigest;
+        return $this->password_digest;
     }
 
-    public function setPasswordDigest(?string $passwordDigest): self
+    public function setPasswordDigest(string $password_digest): self
     {
-        $this->passwordDigest = $passwordDigest;
+        $this->password_digest = $password_digest;
 
         return $this;
     }
 
     public function getRememberDigest(): ?string
     {
-        return $this->rememberDigest;
+        return $this->remember_digest;
     }
 
-    public function setRememberDigest(?string $rememberDigest): self
+    public function setRememberDigest(?string $remember_digest): self
     {
-        $this->rememberDigest = $rememberDigest;
+        $this->remember_digest = $remember_digest;
 
         return $this;
     }
 
-    public function getAdmin(): ?bool
+    public function getAdmin(): ?int
     {
         return $this->admin;
     }
 
-    public function setAdmin(?bool $admin): self
+    public function setAdmin(?int $admin): self
     {
         $this->admin = $admin;
 
@@ -203,75 +232,73 @@ class Users
 
     public function getActivationDigest(): ?string
     {
-        return $this->activationDigest;
+        return $this->activation_digest;
     }
 
-    public function setActivationDigest(?string $activationDigest): self
+    public function setActivationDigest(?string $activation_digest): self
     {
-        $this->activationDigest = $activationDigest;
+        $this->activation_digest = $activation_digest;
 
         return $this;
     }
 
-    public function getActivated(): ?bool
+    public function getActivated(): ?string
     {
         return $this->activated;
     }
 
-    public function setActivated(?bool $activated): self
+    public function setActivated(?string $activated): self
     {
         $this->activated = $activated;
 
         return $this;
     }
 
-    public function getActivatedAt(): ?\DateTimeInterface
+    public function getActivatedAt(): ?string
     {
-        return $this->activatedAt;
+        return $this->activated_at;
     }
 
-    public function setActivatedAt(?\DateTimeInterface $activatedAt): self
+    public function setActivatedAt(?string $activated_at): self
     {
-        $this->activatedAt = $activatedAt;
+        $this->activated_at = $activated_at;
 
         return $this;
     }
 
     public function getResetDigest(): ?string
     {
-        return $this->resetDigest;
+        return $this->reset_digest;
     }
 
-    public function setResetDigest(?string $resetDigest): self
+    public function setResetDigest(?string $reset_digest): self
     {
-        $this->resetDigest = $resetDigest;
+        $this->reset_digest = $reset_digest;
 
         return $this;
     }
 
-    public function getResetSentAt(): ?\DateTimeInterface
+    public function getResetSentAt(): ?string
     {
-        return $this->resetSentAt;
+        return $this->reset_sent_at;
     }
 
-    public function setResetSentAt(?\DateTimeInterface $resetSentAt): self
+    public function setResetSentAt(?string $reset_sent_at): self
     {
-        $this->resetSentAt = $resetSentAt;
+        $this->reset_sent_at = $reset_sent_at;
 
         return $this;
     }
 
-    public function getRoles(): ?array
+    public function getName(): ?string
     {
-        return $this->roles;
+        return $this->name;
     }
 
-    public function setRoles(?array $roles): self
+    public function setName(string $name): self
     {
-        $this->roles = $roles;
+        $this->name = $name;
 
         return $this;
     }
-
-
 }
